@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config()
 import 'reflect-metadata'
 import http from 'http'
 import { setupExpressServer } from './adapters/express'
