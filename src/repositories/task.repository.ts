@@ -63,6 +63,11 @@ class TaskRepository {
         await task.save()
         return task
     }
+
+    async getTasksByUserId(userId: string) {
+        const tasks = await this.taskModel.find({ user: userId }).lean().exec()
+        return tasks
+    }
 }
 
 export default TaskRepository

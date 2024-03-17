@@ -30,6 +30,11 @@ class TaskService {
         const updatedTask = await this.taskRepository.updateTask(taskId, updatedTaskData)
         return updatedTask
     }
+
+    async getTasksByUserId(userId: string) {
+        const tasks = await this.taskRepository.getTasksByUserId(userId)
+        return tasks
+    }
 }
 
 export default TaskService

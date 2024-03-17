@@ -11,7 +11,7 @@ import {
     updateTaskSchema,
 } from '../schemas/task.schema'
 import { StatusCodes } from 'http-status-codes'
-import { authorizeUser } from '../middlewares/auth.middleware'
+import { authorizeUser, authorizeUserAsAdmin } from '../middlewares/auth.middleware'
 import { validateData } from '../middlewares/validation.middleware'
 import ApiError from '../utils/error'
 import { TaskStatus } from '../types/task.types'
@@ -30,6 +30,17 @@ class TaskController {
         if (status !== undefined && !Object.values(TaskStatus).includes(status)) {
             throw new ApiError('Invalid status value', StatusCodes.BAD_REQUEST)
         }
+
+        return sendServerResponse(res, StatusCodes.OK, {
+            tasks,
+        })
+    }
+
+    @withErrorHandler
+    @httpGet('/all/:userId', authorizeUserAsAdmin)
+    async getAllTasksByUserId(req: Request, res: Response) {
+        const { userId } = req.params
+        const tasks = await this.taskService.getTasksByUserId(userId)
 
         return sendServerResponse(res, StatusCodes.OK, {
             tasks,
@@ -81,13 +92,11 @@ class TaskController {
     async updateTask(req: Request, res: Response) {
         const taskId = req.params.id
         const updatedTaskPayload = req.body as UpdateTaskPayload
-
         const task = await this.taskService.updateTask(taskId, updatedTaskPayload)
 
         if (!task) {
             throw new ApiError('task not found!', StatusCodes.NOT_FOUND)
         }
-
         return sendServerResponse(res, StatusCodes.OK, {
             task,
         })
