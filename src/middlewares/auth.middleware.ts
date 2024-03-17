@@ -18,7 +18,9 @@ const authorizeUserAsAdmin = (req: Request, res: Response, next: NextFunction) =
     const authorizationHeader = req.headers.authorization ?? ''
     const token = authorizationHeader.slice(7)
     const { isTokenValid, decodedData } = authTokenManager.validateAndDecodeToken(token)
-    if (!isTokenValid) {
+    const { id, role } = decodedData
+
+    if (!isTokenValid || !id || !role) {
         return sendServerResponse(res, StatusCodes.BAD_REQUEST, null, {
             message: 'invalid token!',
         })
@@ -33,4 +35,21 @@ const authorizeUserAsAdmin = (req: Request, res: Response, next: NextFunction) =
     next()
 }
 
-export { authorizeUserAsAdmin }
+const authorizeUser = (req: Request, res: Response, next: NextFunction) => {
+    const authorizationHeader = req.headers.authorization ?? ''
+    const token = authorizationHeader.slice(7)
+    const { isTokenValid, decodedData } = authTokenManager.validateAndDecodeToken(token)
+    const { id, role } = decodedData
+
+    if (!isTokenValid || !id || !role) {
+        return sendServerResponse(res, StatusCodes.BAD_REQUEST, null, {
+            message: 'invalid token!',
+        })
+    }
+
+    req.id = decodedData.id
+    req.role = decodedData.role
+    next()
+}
+
+export { authorizeUserAsAdmin, authorizeUser }
