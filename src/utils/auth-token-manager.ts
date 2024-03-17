@@ -10,11 +10,11 @@ class AuthTokenManager {
     }
 
     validateAndDecodeToken(token: string) {
-        if (!token) {
-            throw new Error()
-        }
-
         try {
+            if (!token) {
+                throw new Error()
+            }
+
             const decodedData = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload
             const currentTime = Math.floor(Date.now() / 1000)
             const isTokenExpired = decodedData.exp! <= currentTime
