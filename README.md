@@ -24,6 +24,19 @@ Navigate to the project directory and install the dependencies using the followi
 npm install
 ```
 
+## Running Seed Script
+
+Before running the seed script, ensure you have all the necessary dependencies installed. after that you can run:
+
+```bash
+npm run seed-admin-user
+```
+
+## Note: MongoDB Installation Required
+
+Before running the seed script or starting the application, make sure you have MongoDB installed and running locally on your machine. If MongoDB is not installed, please install it from the [official MongoDB website](https://www.mongodb.com/try/download/community) before proceeding.
+
+
 ## Run the Application
 
 Start the development server with the following command:
