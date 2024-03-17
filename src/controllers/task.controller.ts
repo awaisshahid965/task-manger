@@ -1,8 +1,15 @@
 import type { Request, Response } from 'express'
-import { controller, httpDelete, httpGet, httpPost } from 'inversify-express-utils'
+import { controller, httpDelete, httpGet, httpPatch, httpPost } from 'inversify-express-utils'
 import TaskService from '../services/task.service'
 import { sendServerResponse, withErrorHandler } from '../utils'
-import { AllTasksPayload, CreateTaskPayload, allTasksSchema, createTaskSchema } from '../schemas/task.schema'
+import {
+    AllTasksPayload,
+    CreateTaskPayload,
+    UpdateTaskPayload,
+    allTasksSchema,
+    createTaskSchema,
+    updateTaskSchema,
+} from '../schemas/task.schema'
 import { StatusCodes } from 'http-status-codes'
 import { authorizeUser } from '../middlewares/auth.middleware'
 import { validateData } from '../middlewares/validation.middleware'
@@ -65,6 +72,23 @@ class TaskController {
         const task = await this.taskService.createTask(title, description, userId)
 
         return sendServerResponse(res, StatusCodes.CREATED, {
+            task,
+        })
+    }
+
+    @withErrorHandler
+    @httpPatch('/:id', authorizeUser, validateData(updateTaskSchema))
+    async updateTask(req: Request, res: Response) {
+        const taskId = req.params.id
+        const updatedTaskPayload = req.body as UpdateTaskPayload
+
+        const task = await this.taskService.updateTask(taskId, updatedTaskPayload)
+
+        if (!task) {
+            throw new ApiError('task not found!', StatusCodes.NOT_FOUND)
+        }
+
+        return sendServerResponse(res, StatusCodes.OK, {
             task,
         })
     }

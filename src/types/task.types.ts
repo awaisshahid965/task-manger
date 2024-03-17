@@ -8,6 +8,6 @@ export enum TaskStatus {
 export interface Task {
     title: string
     description: string
-    status: string
+    status: TaskStatus
     user: mongoose.Types.ObjectId
 }

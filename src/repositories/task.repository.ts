@@ -1,6 +1,6 @@
 import { injectable } from 'inversify'
 import TaskModel, { TaskModelType } from '../models/task.model'
-import { TaskStatus } from '../types/task.types'
+import { Task, TaskStatus } from '../types/task.types'
 
 @injectable()
 class TaskRepository {
@@ -42,6 +42,26 @@ class TaskRepository {
             .exec()
 
         return tasks
+    }
+
+    async updateTask(taskId: string, updatedTaskData: Partial<Task>) {
+        const task = await this.taskModel.findById(taskId)
+        if (!task) {
+            return null
+        }
+
+        if (updatedTaskData.title) {
+            task.title = updatedTaskData.title
+        }
+        if (updatedTaskData.description) {
+            task.description = updatedTaskData.description
+        }
+        if (updatedTaskData.status) {
+            task.status = updatedTaskData.status
+        }
+
+        await task.save()
+        return task
     }
 }
 
