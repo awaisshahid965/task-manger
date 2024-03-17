@@ -20,4 +20,5 @@ const userSchema = new Schema<UserDocument>({
 })
 
 const UserModel = model('User', userSchema)
+export type UserModelType = typeof UserModel
 export default UserModel

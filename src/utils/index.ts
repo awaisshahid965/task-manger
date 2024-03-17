@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import ApiError from './error'
+import { StatusCodes } from 'http-status-codes'
 
 export function withErrorHandler(_: unknown, __: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value
@@ -8,9 +9,14 @@ export function withErrorHandler(_: unknown, __: string, descriptor: PropertyDes
         try {
             await originalMethod.call(this, req, res, next)
         } catch (error) {
-            const apiError = error as ApiError
-            sendServerResponse(res, apiError.statusCode ?? 500, null, {
-                message: apiError.message ?? 'Internal Server Error',
+            if (error instanceof ApiError) {
+                const apiError = error as ApiError
+                return sendServerResponse(res, apiError.statusCode, null, {
+                    message: apiError.message,
+                })
+            }
+            return sendServerResponse(res, StatusCodes.INTERNAL_SERVER_ERROR, null, {
+                message: 'Internal Server Error',
             })
         }
     }

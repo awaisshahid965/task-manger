@@ -19,7 +19,6 @@ export function validateData(schema: z.Schema) {
             next()
         } catch (error) {
             if (error instanceof ZodError) {
-                console.log(error.errors)
                 const errors = generateErrorObjectFromZodErrors(error.errors as ZodValidationErrors)
                 sendServerResponse(res, StatusCodes.BAD_REQUEST, null, errors)
             } else {
