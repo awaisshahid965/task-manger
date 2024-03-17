@@ -26,6 +26,11 @@ class UserRepository {
             role: UserRole.Client,
         }
     }
+
+    async getAllUsers() {
+        const users = await this.userModel.find().lean().exec()
+        return users
+    }
 }
 
 export default UserRepository
