@@ -12,8 +12,8 @@ Make sure the following software is installed on your machine:
 ## Clone the Repository
 
 ```bash
-git clone https://github.com/awaisshahid965/users-manager.git
-cd users-manager
+git clone https://github.com/awaisshahid965/task-manger.git
+cd task-manger
 ```
 
 ## Install Dependencies
